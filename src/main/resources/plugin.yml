@@ -7,4 +7,4 @@ depends: [LlamaEconomy]
 commands:
      ranks:
          description: Compra rangos con la moneda del servidor
-         usage: /ranks
+         usage: /rangos
