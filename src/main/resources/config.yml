@@ -1,0 +1,42 @@
+# ===================================
+# Rankshop UI por BrunoJaegerK
+# ===================================
+
+form-name: "§lRankShop"
+confirmation-form-name: "§lConfirm your purchase"
+rank-purchased: "§8┃ §6Rankshop§8× you have purchased a rank successfully"
+no-money: "§8┃ §6Rankshop§8× you dont have enough money to purchase this rank"
+
+# always start the identifier from 0
+# the config is pretty self explanatory :) 
+# lp-user is the name of your group in luckperms 
+# name is  the name for the form
+# and price is price
+
+identifiers:
+- "0"
+- "1"
+- "2"
+- "3"
+- "4"
+   
+"0":
+    name: "PRUEBA1"
+    lp-user: "prueba1"
+    price: 20000.00
+"1":
+    name: "PRUEBA2"
+    lp-user: "prueba2"
+    price: 35000.00
+"2":
+    name: "PRUEBA3"
+    lp-user: "prueba3"
+    price: 40000.00
+"3":
+    name: "PRUEBA4"
+    lp-user: "prueba4"
+    price: 50000.00
+"4":
+    name: "PRUEBA5"
+    lp-user: "prueba5"
+    price: 80000.00
