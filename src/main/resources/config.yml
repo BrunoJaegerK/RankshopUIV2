@@ -1,42 +1,56 @@
 # ===================================
-# Rankshop UI por BrunoJaegerK
+# RankshopUIV2 - BrunoJaegerK
 # ===================================
 
 form-name: "§lRankShop"
-confirmation-form-name: "§lConfirm your purchase"
-rank-purchased: "§8┃ §6Rankshop§8× you have purchased a rank successfully"
-no-money: "§8┃ §6Rankshop§8× you dont have enough money to purchase this rank"
+confirmation-form-name: "§lConfirmar compra"
 
-# always start the identifier from 0
-# the config is pretty self explanatory :) 
-# lp-user is the name of your group in luckperms 
-# name is  the name for the form
-# and price is price
+rank-purchased: "§8┃ §6Rankshop §8× §aHas comprado un rango correctamente."
+no-money: "§8┃ §6Rankshop §8× §cNo tienes suficiente dinero."
 
 identifiers:
-- "0"
-- "1"
-- "2"
-- "3"
-- "4"
-   
+  - "0"
+  - "1"
+  - "2"
+  - "3"
+  - "4"
+
+# name: nombre mostrado en el formulario
+# lp-user: grupo de LuckPerms que se asignará
+# price: precio del rango
+# kits: identificadores de kits que desbloquea el rango
+
 "0":
-    name: "PRUEBA1"
-    lp-user: "prueba1"
-    price: 20000.00
+  name: "PRUEBA1"
+  lp-user: "prueba1"
+  price: 20000.00
+  kits:
+    - "vip"
+
 "1":
-    name: "PRUEBA2"
-    lp-user: "prueba2"
-    price: 35000.00
+  name: "PRUEBA2"
+  lp-user: "prueba2"
+  price: 35000.00
+  kits:
+    - "vipplus"
+
 "2":
-    name: "PRUEBA3"
-    lp-user: "prueba3"
-    price: 40000.00
+  name: "PRUEBA3"
+  lp-user: "prueba3"
+  price: 40000.00
+  kits:
+    - "elite"
+
 "3":
-    name: "PRUEBA4"
-    lp-user: "prueba4"
-    price: 50000.00
+  name: "PRUEBA4"
+  lp-user: "prueba4"
+  price: 50000.00
+  kits:
+    - "hero"
+
 "4":
-    name: "PRUEBA5"
-    lp-user: "prueba5"
-    price: 80000.00
+  name: "PRUEBA5"
+  lp-user: "prueba5"
+  price: 80000.00
+  kits:
+    - "legend"
