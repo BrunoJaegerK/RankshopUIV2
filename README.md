@@ -98,8 +98,6 @@ Las siguientes imágenes están reservadas para capturas reales del plugin en fu
 
 *Ejemplo de objetos con nombres personalizados y encantamientos.*
 
-> **Nota:** sube tus capturas a `docs/images/` con esos nombres para que aparezcan correctamente. Las imágenes anteriores son rutas previstas, no capturas que ya estén incluidas en el repositorio.
-
 ## 🔄 Funcionamiento
 
 ### 1. Compra de rangos
