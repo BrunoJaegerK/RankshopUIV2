@@ -15,6 +15,11 @@ import cn.nukkit.item.Item;
 import cn.nukkit.item.enchantment.Enchantment;
 import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.group.Group;
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.query.QueryOptions;
 
 import net.lldv.llamaeconomy.LlamaEconomy;
 
@@ -228,6 +233,16 @@ public class Main extends PluginBase implements Listener {
             return;
         }
 
+        // Comprobar si el jugador ya tiene este rango.
+        if (hasRankGroup(player, group)) {
+            player.sendMessage(text(
+                    "messages.rank-already-owned",
+                    "§eYa tienes el rango §d{rank}§e.",
+                    Collections.singletonMap("rank", rankName)
+            ));
+            return;
+        }
+
         if (LlamaEconomy.getAPI().getMoney(player) < price) {
             player.sendMessage(message("messages.no-money"));
             return;
@@ -285,6 +300,51 @@ public class Main extends PluginBase implements Listener {
                         Collections.singletonMap("rank", rankName)
                 )
         );
+    }
+
+    private boolean hasRankGroup(Player player, String groupName) {
+        try {
+            LuckPerms luckPerms = LuckPermsProvider.get();
+            User user = luckPerms.getUserManager()
+                    .getUser(player.getUniqueId());
+
+            // Si no podemos comprobar el rango, no permitimos el cobro.
+            if (user == null) {
+                getLogger().warning(
+                        "No se pudieron consultar los rangos de "
+                                + player.getName()
+                );
+                return true;
+            }
+
+            // Comprobar el grupo principal.
+            if (user.getPrimaryGroup().equalsIgnoreCase(groupName)) {
+                return true;
+            }
+
+            // Comprobar grupos directos y heredados.
+            for (Group inheritedGroup :
+                    user.getInheritedGroups(
+                            QueryOptions.defaultContextualOptions())) {
+
+                if (inheritedGroup.getName()
+                        .equalsIgnoreCase(groupName)) {
+                    return true;
+                }
+            }
+
+            return false;
+
+        } catch (Exception exception) {
+            getLogger().warning(
+                    "Error al verificar el rango de "
+                            + player.getName() + ": "
+                            + exception.getMessage()
+            );
+
+            // No cobrar cuando no se puede verificar el rango.
+            return true;
+        }
     }
 
     // --------------------------------------------------
