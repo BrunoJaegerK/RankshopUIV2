@@ -17,7 +17,7 @@ forms:
   kits:
     title: "§l§dTus kits"
     content: "§7Selecciona el kit que deseas reclamar."
-    kit-button: "§b{kit}\n§7Estado: {status}"
+    kit-button: "§b{kit}\n§7{status}"
     available-status: "§aDisponible"
     cooldown-status: "§cDisponible en {time}"
 
@@ -29,6 +29,7 @@ messages:
   purchase-success: "§aHas comprado el rango §d{rank}§a correctamente."
   rank-config-error: "§cLa configuración de este rango es incorrecta."
   rank-error: "§cNo se pudo asignar el rango. Contacta con un administrador."
+  rank-already-owned: "§eYa tienes este rango. No necesitas comprarlo otra vez."
 
   no-kits: "§cNo tienes kits desbloqueados."
   kit-no-permission: "§cNo tienes desbloqueado este kit."
