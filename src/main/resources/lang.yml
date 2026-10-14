@@ -1,0 +1,39 @@
+# ===================================
+# Idioma de RankshopUIV2
+# ===================================
+
+forms:
+  shop:
+    title: "§l§dRankShop"
+    content: "§7Selecciona el rango que deseas comprar."
+    rank-button: "§8{rank}\n§d${price}\n§7Toca para seleccionar"
+
+  confirmation:
+    title: "§l§dConfirmar compra"
+    content: "§7¿Deseas comprar §d{rank} §7por §d${price}§7?"
+    buy-button: "§aConfirmar compra"
+    cancel-button: "§cCancelar"
+
+  kits:
+    title: "§l§dTus kits"
+    content: "§7Selecciona el kit que deseas reclamar."
+    kit-button: "§b{kit}\n§7Estado: {status}"
+    available-status: "§aDisponible"
+    cooldown-status: "§cDisponible en {time}"
+
+messages:
+  player-only: "§cEste comando solo se puede utilizar dentro del juego."
+  no-ranks: "§cNo hay rangos configurados."
+  no-money: "§cNo tienes suficiente dinero para comprar este rango."
+  purchase-cancelled: "§7Has cancelado la compra."
+  purchase-success: "§aHas comprado el rango §d{rank}§a correctamente."
+  rank-config-error: "§cLa configuración de este rango es incorrecta."
+  rank-error: "§cNo se pudo asignar el rango. Contacta con un administrador."
+
+  no-kits: "§cNo tienes kits desbloqueados."
+  kit-no-permission: "§cNo tienes desbloqueado este kit."
+  kit-config-error: "§cEste kit contiene una configuración inválida."
+  kit-empty: "§cEste kit no tiene objetos configurados."
+  kit-cooldown: "§cPodrás reclamar este kit en §e{time}§c."
+  kit-claimed: "§aHas reclamado el kit §b{kit}§a."
+  inventory-full: "§cNo tienes espacio suficiente en tu inventario."
