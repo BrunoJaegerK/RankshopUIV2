@@ -76,25 +76,25 @@ Las siguientes imágenes están reservadas para capturas reales del plugin en fu
 
 ### 🛒 Tienda de rangos
 
-![Captura de la tienda de rangos](docs/images/tienda-rangos.png)
+![Captura de la tienda de rangos](docs/images/Interfazrangos.png)
 
 *Interfaz con los rangos disponibles y sus precios.*
 
 ### ✅ Confirmación de compra
 
-![Captura de confirmación de compra](docs/images/confirmar-compra.png)
+![Captura de confirmación de compra](docs/images/Confirmacionrangos.png)
 
 *Formulario para confirmar o cancelar la compra de un rango.*
 
 ### 🎁 Menú de kits
 
-![Captura del menú de kits](docs/images/menu-kits.png)
+![Captura del menú de kits](docs/images/InterfazKits.png)
 
 *Interfaz que muestra los kits desbloqueados y su disponibilidad.*
 
 ### ⚔️ Objetos personalizados
 
-![Captura de objetos personalizados](docs/images/objetos-encantados.png)
+![Captura de objetos personalizados](docs/images/Kitsentregados.png)
 
 *Ejemplo de objetos con nombres personalizados y encantamientos.*
 
@@ -446,76 +446,6 @@ El valor del cooldown es una marca de tiempo Unix expresada en segundos. El ejem
 
 No edites ni elimines este archivo mientras el servidor está en funcionamiento. Haz una copia de seguridad antes de realizar cambios manuales.
 
-## 🧩 Estructura del proyecto
-
-```text
-RankshopUIV2/
-├── libs/
-│   ├── nukkit.jar
-│   ├── LlamaEconomy-1.0.0.1-SNAPSHOT.jar
-│   └── LuckPerms-Nukkit-5.5.20.jar
-├── gradle/
-│   └── wrapper/
-├── src/
-│   └── main/
-│       ├── java/
-│       │   └── com/
-│       │       └── brunojaegerk/
-│       │           └── rankshop/
-│       │               └── Main.java
-│       └── resources/
-│           ├── config.yml
-│           ├── kits.yml
-│           ├── lang.yml
-│           └── plugin.yml
-├── build.gradle.kts
-├── settings.gradle.kts
-├── gradlew
-└── gradlew.bat
-```
-
-### Archivos importantes
-
-- `Main.java`: contiene la lógica de la tienda, las compras, los kits, los objetos y los cooldowns.
-- `config.yml`: define los rangos y sus precios.
-- `kits.yml`: define los kits, los objetos y sus tiempos de espera.
-- `lang.yml`: contiene los textos de las interfaces y los mensajes.
-- `plugin.yml`: define los metadatos, comandos y dependencias declaradas del plugin.
-- `build.gradle.kts`: configura la compilación del proyecto mediante Gradle.
-- `libs/`: contiene los JAR utilizados como dependencias de compilación.
-
-## 🔨 Compilar desde el código fuente
-
-El proyecto utiliza Gradle con Kotlin DSL.
-
-### Windows
-
-Desde la carpeta raíz del proyecto, abre PowerShell o la terminal de IntelliJ y ejecuta:
-
-```powershell
-.\gradlew.bat clean build
-```
-
-### Linux
-
-```bash
-./gradlew clean build
-```
-
-Cuando la compilación finalice correctamente, el JAR se encontrará normalmente en:
-
-```text
-build/libs/
-```
-
-### Requisitos de compilación
-
-- Un JDK compatible con la configuración de Gradle del proyecto.
-- El Gradle Wrapper incluido en el repositorio.
-- Las bibliotecas necesarias dentro de `libs/`.
-
-El archivo `build.gradle.kts` declara las bibliotecas como `compileOnly`. Esto significa que se utilizan para compilar el plugin, pero no se incluyen automáticamente dentro del JAR final. Las dependencias deben instalarse por separado en el servidor.
-
 ## ❓ Solución de problemas
 
 <details>
@@ -592,5 +522,4 @@ Ejecuta `.\gradlew.bat clean build` desde la raíz del proyecto y revisa el prim
 ---
 
 <p align="center">
-  Hecho con ❤️ para la comunidad de servidores Minecraft Bedrock.
 </p>
