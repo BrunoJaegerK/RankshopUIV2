@@ -517,6 +517,13 @@ Ejecuta `.\gradlew.bat clean build` desde la raíz del proyecto y revisa el prim
 - Repositorio: [RankshopUIV2](https://github.com/BrunoJaegerK/RankshopUIV2)
 - Otro proyecto: [NeoBuyerV2.2](https://github.com/BrunoJaegerK/NeoBuyerV2.2)
 
+## 📜 Licencia
+
+Este proyecto está protegido bajo la
+[Apache License 2.0](LICENSE).
+
+Copyright © 2026 Bruno JaegerK.
+
 ---
 
 <p align="center">
