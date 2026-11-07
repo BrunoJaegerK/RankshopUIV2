@@ -1,3 +1,4 @@
+
 package com.brunojaegerk.rankshop;
 
 import cn.nukkit.Player;
@@ -30,11 +31,15 @@ public final class RankPurchaseService {
 
     public RankPurchaseService(Main plugin, Config kits) {
         if (plugin == null) {
-            throw new IllegalArgumentException("plugin no puede ser null");
+            throw new IllegalArgumentException(
+                    "plugin no puede ser null"
+            );
         }
 
         if (kits == null) {
-            throw new IllegalArgumentException("kits no puede ser null");
+            throw new IllegalArgumentException(
+                    "kits no puede ser null"
+            );
         }
 
         this.plugin = plugin;
@@ -42,14 +47,25 @@ public final class RankPurchaseService {
     }
 
     /**
-     * Procesa la compra de un rango.
-     * El bloqueo se administra en Main.
+     * Procesa la compra de un rango y registra el resultado.
+     * El bloqueo de compras se administra en Main.
      */
     public void purchaseRank(Player player, String id) {
         if (player == null || id == null || id.trim().isEmpty()) {
             if (player != null) {
-                player.sendMessage(plugin.message("messages.rank-error"));
+                player.sendMessage(
+                        plugin.message("messages.rank-error")
+                );
             }
+
+            plugin.getPurchaseLogger().log(
+                    player == null ? "unknown" : player.getName(),
+                    id,
+                    id,
+                    Double.NaN,
+                    "FAILED",
+                    "invalid_purchase_request"
+            );
             return;
         }
 
@@ -57,6 +73,7 @@ public final class RankPurchaseService {
         String group = plugin.getConfig().getString(id + ".lp-user");
         String rankName = plugin.getConfig().getString(id + ".name", id);
 
+        // Validar la configuración del rango.
         if (!Double.isFinite(price)
                 || price < 0
                 || group == null
@@ -69,46 +86,97 @@ public final class RankPurchaseService {
             plugin.getLogger().warning(
                     "Configuración inválida para el rango " + id
             );
+
+            plugin.getPurchaseLogger().log(
+                    player.getName(),
+                    id,
+                    rankName,
+                    price,
+                    "FAILED",
+                    "invalid_rank_configuration"
+            );
             return;
         }
 
-        // Si no se puede verificar el grupo, se falla de forma segura.
+        // No permitir la compra si ya tiene el rango
+        // o no se pudo verificar su grupo.
         if (hasRankGroup(player, group)) {
             player.sendMessage(plugin.text(
                     "messages.rank-already-owned",
                     "§eYa tienes el rango §d{rank}§e.",
                     Collections.singletonMap("rank", rankName)
             ));
+
+            plugin.getPurchaseLogger().log(
+                    player.getName(),
+                    id,
+                    rankName,
+                    price,
+                    "REJECTED",
+                    "rank_owned_or_group_check_failed"
+            );
             return;
         }
 
+        // Comprobar el saldo antes de asignar el rango.
         if (LlamaEconomy.getAPI().getMoney(player) < price) {
-            player.sendMessage(plugin.message("messages.no-money"));
+            player.sendMessage(
+                    plugin.message("messages.no-money")
+            );
+
+            plugin.getPurchaseLogger().log(
+                    player.getName(),
+                    id,
+                    rankName,
+                    price,
+                    "REJECTED",
+                    "insufficient_balance"
+            );
             return;
         }
 
+        // Asignar el grupo de LuckPerms.
         boolean dispatched = plugin.getServer().dispatchCommand(
                 plugin.getServer().getConsoleSender(),
-                "lp user " + player.getName() + " parent add " + group
+                "lp user " + player.getName()
+                        + " parent add " + group
         );
 
         if (!dispatched) {
-            player.sendMessage(plugin.message("messages.rank-error"));
+            player.sendMessage(
+                    plugin.message("messages.rank-error")
+            );
 
             plugin.getLogger().warning(
                     "No se pudo ejecutar LuckPerms para "
                             + player.getName()
             );
+
+            plugin.getPurchaseLogger().log(
+                    player.getName(),
+                    id,
+                    rankName,
+                    price,
+                    "FAILED",
+                    "luckperms_command_dispatch_failed"
+            );
             return;
         }
 
-        LlamaEconomy.getAPI().reduceMoney(player.getName(), price);
+        // Descontar el precio del rango.
+        LlamaEconomy.getAPI().reduceMoney(
+                player.getName(),
+                price
+        );
 
-        // Conserva los kits anteriores y añade los del rango comprado.
+        // Conservar los kits anteriores y añadir
+        // los kits desbloqueados por el rango comprado.
         Set<String> unlocked =
                 new LinkedHashSet<>(plugin.unlockedKits(player));
 
-        for (String kitId : plugin.getConfig().getStringList(id + ".kits")) {
+        for (String kitId :
+                plugin.getConfig().getStringList(id + ".kits")) {
+
             if (kits.exists(kitId)) {
                 unlocked.add(kitId);
             } else {
@@ -120,8 +188,23 @@ public final class RankPurchaseService {
             }
         }
 
-        plugin.setUnlockedKits(player, new ArrayList<>(unlocked));
+        // Guardar los kits desbloqueados del jugador.
+        plugin.setUnlockedKits(
+                player,
+                new ArrayList<>(unlocked)
+        );
 
+        // Registrar la compra completada.
+        plugin.getPurchaseLogger().log(
+                player.getName(),
+                id,
+                rankName,
+                price,
+                "SUCCESS",
+                "purchased"
+        );
+
+        // Mantener el mensaje de éxito existente.
         player.sendMessage(plugin.text(
                 "messages.purchase-success",
                 "§aHas comprado el rango {rank}.",
@@ -129,9 +212,13 @@ public final class RankPurchaseService {
         ));
     }
 
-    private boolean hasRankGroup(Player player, String groupName) {
+    private boolean hasRankGroup(
+            Player player,
+            String groupName
+    ) {
         try {
             LuckPerms luckPerms = LuckPermsProvider.get();
+
             User user = luckPerms.getUserManager()
                     .getUser(player.getUniqueId());
 
@@ -151,12 +238,14 @@ public final class RankPurchaseService {
             for (Group inheritedGroup : user.getInheritedGroups(
                     QueryOptions.defaultContextualOptions())) {
 
-                if (inheritedGroup.getName().equalsIgnoreCase(groupName)) {
+                if (inheritedGroup.getName()
+                        .equalsIgnoreCase(groupName)) {
                     return true;
                 }
             }
 
             return false;
+
         } catch (Exception exception) {
             plugin.getLogger().warning(
                     "Error al verificar el rango de "
@@ -164,9 +253,11 @@ public final class RankPurchaseService {
                             + ": " + exception.getMessage()
             );
 
-            // Si no se puede comprobar el rango, no se permite cobrar.
+            // Si no se puede verificar el rango,
+            // no se permite cobrar al jugador.
             return true;
         }
     }
 }
+
 

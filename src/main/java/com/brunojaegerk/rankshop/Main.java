@@ -37,6 +37,7 @@ public final class Main extends PluginBase implements Listener {
     private PurchaseManager purchaseManager;
     private RankPurchaseService rankPurchaseService;
     private KitService kitService;
+    private PurchaseLogger purchaseLogger;
 
     private final Map<UUID, Integer> pendingPurchaseForms = new HashMap<>();
     private final Map<UUID, String> pendingPurchases = new HashMap<>();
@@ -80,6 +81,8 @@ public final class Main extends PluginBase implements Listener {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+
+        purchaseLogger = new PurchaseLogger(this);
 
         purchaseManager = new PurchaseManager();
         rankPurchaseService = new RankPurchaseService(this, kits);
@@ -523,6 +526,10 @@ public final class Main extends PluginBase implements Listener {
                 "%.2f",
                 price
         );
+    }
+
+    public PurchaseLogger getPurchaseLogger() {
+        return purchaseLogger;
     }
 }
 
