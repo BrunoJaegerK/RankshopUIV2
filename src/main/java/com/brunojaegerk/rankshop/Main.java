@@ -34,6 +34,7 @@ public final class Main extends PluginBase implements Listener {
     private Config playerData;
     private Config lang;
 
+    private EconomyBridge economyBridge;
     private PurchaseManager purchaseManager;
     private RankPurchaseService rankPurchaseService;
     private KitService kitService;
@@ -82,6 +83,7 @@ public final class Main extends PluginBase implements Listener {
             return;
         }
 
+        economyBridge = new EconomyBridge(this);
         purchaseLogger = new PurchaseLogger(this);
 
         purchaseManager = new PurchaseManager();
@@ -170,9 +172,13 @@ public final class Main extends PluginBase implements Listener {
         for (String id : rankIds) {
             String name = ranks.getString(id + ".name", id);
             double price = ranks.getDouble(id + ".price", 0.0);
+            String currencyId = ranks.getString(id + ".currency",
+                    EconomyBridge.LEGACY_CURRENCY);
+            String priceText = economyBridge.getSymbol(currencyId)
+                    + economyBridge.formatPrice(currencyId, price);
 
             form.addButton(new ElementButton(
-                    name + "\n§7Precio: §6" + formatPrice(price)
+                    name + "\n§7Precio: §6" + priceText
             ));
         }
 
@@ -191,7 +197,11 @@ public final class Main extends PluginBase implements Listener {
 
     private void openPurchaseConfirmation(Player player, String rankId) {
         String rankName = ranks.getString(rankId + ".name", rankId);
-        String price = formatPrice(ranks.getDouble(rankId + ".price", 0.0));
+        double amount = ranks.getDouble(rankId + ".price", 0.0);
+        String currencyId = ranks.getString(rankId + ".currency",
+                EconomyBridge.LEGACY_CURRENCY);
+        String price = economyBridge.getSymbol(currencyId)
+                + economyBridge.formatPrice(currencyId, amount);
 
         FormWindowModal form = new FormWindowModal(
                 text("forms.purchase-title",
@@ -512,20 +522,8 @@ public final class Main extends PluginBase implements Listener {
         return values;
     }
 
-    private String formatPrice(double price) {
-        if (price == Math.rint(price)) {
-            return String.format(
-                    java.util.Locale.ROOT,
-                    "%.0f",
-                    price
-            );
-        }
-
-        return String.format(
-                java.util.Locale.ROOT,
-                "%.2f",
-                price
-        );
+    public EconomyBridge getEconomyBridge() {
+        return economyBridge;
     }
 
     public PurchaseLogger getPurchaseLogger() {

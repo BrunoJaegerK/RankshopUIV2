@@ -5,6 +5,10 @@
 form-name: "§lRankShop"
 confirmation-form-name: "§lConfirmar compra"
 
+# Símbolo mostrado para la moneda heredada de LlamaEconomy.
+# Las monedas de EconomyExpandNK usan su propio símbolo de currencies.yml.
+currency-symbol: "$"
+
 rank-purchased: "§8┃ §6Rankshop §8× §aHas comprado un rango correctamente."
 no-money: "§8┃ §6Rankshop §8× §cNo tienes suficiente dinero."
 
@@ -18,12 +22,14 @@ identifiers:
 # name: nombre mostrado en el formulario
 # lp-user: grupo de LuckPerms que se asignará
 # price: precio del rango
+# currency: ID de moneda (llamaeconomy o una moneda habilitada en EconomyExpandNK)
 # kits: identificadores de kits que desbloquea el rango
 
 "0":
   name: "PRUEBA1"
   lp-user: "prueba1"
   price: 20000.00
+  currency: "llamaeconomy"
   kits:
     - "vip"
 
@@ -31,6 +37,7 @@ identifiers:
   name: "PRUEBA2"
   lp-user: "prueba2"
   price: 35000.00
+  currency: "llamaeconomy"
   kits:
     - "vipplus"
 
@@ -38,6 +45,7 @@ identifiers:
   name: "PRUEBA3"
   lp-user: "prueba3"
   price: 40000.00
+  currency: "llamaeconomy"
   kits:
     - "elite"
 
@@ -45,6 +53,7 @@ identifiers:
   name: "PRUEBA4"
   lp-user: "prueba4"
   price: 50000.00
+  currency: "llamaeconomy"
   kits:
     - "hero"
 
@@ -52,5 +61,6 @@ identifiers:
   name: "PRUEBA5"
   lp-user: "prueba5"
   price: 80000.00
+  currency: "llamaeconomy"
   kits:
     - "legend"

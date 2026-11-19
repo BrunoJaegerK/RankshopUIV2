@@ -5,7 +5,7 @@
   <img src="https://img.shields.io/badge/Plataforma-Nukkit-blue" alt="Nukkit">
   <img src="https://img.shields.io/badge/Lenguaje-Java-orange?logo=openjdk&logoColor=white" alt="Java">
   <img src="https://img.shields.io/badge/Build-Gradle-02303A?logo=gradle&logoColor=white" alt="Gradle">
-  <img src="https://img.shields.io/badge/Versión-1.1.0-purple" alt="Versión">
+  <img src="https://img.shields.io/badge/Versión-1.2.0-purple" alt="Versión">
 </p>
 
 <p align="center">
@@ -44,9 +44,10 @@
 
 **RankshopUIV2** es un plugin para servidores de Minecraft Bedrock basados en Nukkit y forks compatibles. Su objetivo es permitir que los jugadores compren rangos con la moneda del servidor y reciban acceso a kits especiales que pueden reclamar desde una interfaz gráfica.
 
-El plugin integra dos sistemas principales:
+El plugin integra tres sistemas principales:
 
-- **LlamaEconomy:** consulta el saldo del jugador y descuenta el costo de la compra.
+- **LlamaEconomy:** economía heredada y predeterminada, compatible con las configuraciones existentes.
+- **[EconomyExpandNK](https://github.com/BrunoJaegerK/EconomyExpandNK):** dependencia **opcional** que permite cobrar cada rango con una moneda secundaria configurada.
 - **LuckPerms:** asigna el grupo correspondiente al rango comprado.
 
 Además, incluye un sistema de kits configurables con cooldowns individuales, objetos con nombres personalizados, colores y múltiples encantamientos.
@@ -128,10 +129,10 @@ Las siguientes imágenes están reservadas para capturas reales del plugin en fu
 flowchart TD
     A["/rangos"] --> B["Seleccionar rango"]
     B --> C["Confirmar compra"]
-    C --> D{"¿Saldo suficiente?"}
+    C --> D{"¿Saldo suficiente en la moneda del rango?"}
     D -- "No" --> E["Mostrar saldo insuficiente"]
-    D -- "Sí" --> F["Asignar grupo con LuckPerms"]
-    F --> G["Descontar dinero con LlamaEconomy"]
+    D -- "Sí" --> F["Descontar la moneda seleccionada"]
+    F --> G["Asignar grupo con LuckPerms"]
     G --> H["Desbloquear kits"]
     H --> I["/kits"]
     I --> J["Seleccionar kit"]
@@ -143,7 +144,7 @@ flowchart TD
     O --> P["Guardar cooldown"]
 ```
 
-> **Importante:** el proceso de compra utiliza una orden de LuckPerms y después descuenta el dinero. No es una transacción atómica: un fallo durante una de esas operaciones podría dejar los resultados parcialmente aplicados. Comprueba la consola si una compra presenta problemas.
+> **Importante:** el plugin descuenta primero la moneda seleccionada y después solicita a LuckPerms la asignación del grupo. Si no se puede iniciar la orden de LuckPerms, intenta reembolsar el importe usando la misma moneda. Revisa la consola si una compra presenta problemas.
 
 ## 📦 Dependencias
 
@@ -152,23 +153,25 @@ RankshopUIV2 necesita las siguientes dependencias:
 | Dependencia | Función |
 |---|---|
 | **Nukkit o fork compatible** | Plataforma del servidor donde se ejecuta el plugin. |
-| **LlamaEconomy** | Sistema económico utilizado para consultar y descontar dinero. |
+| **LlamaEconomy** | Dependencia requerida; economía predeterminada y compatibilidad con rangos antiguos. |
+| **[EconomyExpandNK](https://github.com/BrunoJaegerK/EconomyExpandNK)** | **Opcional**; necesaria únicamente para usar monedas secundarias. |
 | **LuckPerms para Nukkit** | Administración de grupos y permisos de rangos. |
 
 Las versiones de estas dependencias deben ser compatibles con el servidor utilizado.
 
-El plugin comprueba al iniciarse que LlamaEconomy y LuckPerms estén instalados. Si no encuentra alguno de ellos, deshabilita el plugin.
+El plugin comprueba al iniciarse que LlamaEconomy y LuckPerms estén instalados. Si no encuentra alguno de ellos, deshabilita el plugin. EconomyExpandNK es opcional: sin él, los rangos configurados con monedas secundarias no estarán disponibles para compra, pero los rangos que usan LlamaEconomy seguirán funcionando.
 
 ## ⚙️ Instalación
 
 1. Descarga o compila el JAR de Rankshop.
 2. Instala LlamaEconomy y LuckPerms en versiones compatibles con tu servidor.
-3. Coloca el JAR de Rankshop en la carpeta `plugins/`.
-4. Inicia el servidor para que se generen los archivos de configuración.
-5. Detén el servidor antes de editar la configuración.
-6. Personaliza los archivos dentro de `plugins/Rankshop/`.
-7. Inicia de nuevo el servidor.
-8. Prueba `/rangos` y `/kits`.
+3. (Opcional) Instala [EconomyExpandNK](https://github.com/BrunoJaegerK/EconomyExpandNK) si vas a cobrar rangos con monedas secundarias.
+4. Coloca el JAR de Rankshop en la carpeta `plugins/`.
+5. Inicia el servidor para que se generen los archivos de configuración.
+6. Detén el servidor antes de editar la configuración.
+7. Personaliza los archivos dentro de `plugins/Rankshop/`.
+8. Inicia de nuevo el servidor.
+9. Prueba `/rangos` y `/kits`.
 
 La carpeta de configuración debería contener:
 
@@ -210,13 +213,15 @@ identifiers:
   name: "VIP"
   lp-user: "vip"
   price: 20000
+  currency: "llamaeconomy"
   kits:
     - "vip"
 
 "vipplus":
   name: "VIP+"
   lp-user: "vipplus"
-  price: 35000
+  price: 350
+  currency: "crystals"
   kits:
     - "vipplus"
     - "vip"
@@ -224,7 +229,8 @@ identifiers:
 "elite":
   name: "Elite"
   lp-user: "elite"
-  price: 50000
+  price: 120
+  currency: "tokens"
   kits:
     - "elite"
 ```
@@ -236,8 +242,37 @@ identifiers:
 | `identifiers` | Lista de identificadores que aparecen en la tienda. |
 | `name` | Nombre que se muestra en el formulario. |
 | `lp-user` | Nombre del grupo de LuckPerms que se asigna. |
-| `price` | Precio del rango en la moneda de LlamaEconomy. |
+| `price` | Precio del rango en la moneda seleccionada. |
+| `currency` | ID de la moneda: `llamaeconomy` o el ID de una moneda habilitada en EconomyExpandNK. Si se omite, se utiliza `llamaeconomy`. |
 | `kits` | Lista de identificadores de kits que se desbloquean. |
+
+### Configurar la moneda de cada rango
+
+Cada rango tiene su propia opción `currency`. Usa `llamaeconomy` para la economía tradicional o el ID exacto de una moneda habilitada en `plugins/EconomyExpandNK/currencies.yml`.
+
+```yaml
+"vip":
+  name: "VIP"
+  lp-user: "vip"
+  price: 20000
+  currency: "llamaeconomy"
+
+"vipplus":
+  name: "VIP+"
+  lp-user: "vipplus"
+  price: 350
+  currency: "crystals"
+
+"elite":
+  name: "Elite"
+  lp-user: "elite"
+  price: 120
+  currency: "tokens"
+```
+
+Los formularios muestran el símbolo de la moneda junto al precio tanto en la lista de rangos como en la confirmación. Para LlamaEconomy se usa `currency-symbol` en la raíz de `config.yml`; para EconomyExpandNK se toma automáticamente el símbolo definido en `currencies.yml`.
+
+**EconomyExpandNK es opcional.** Si no está instalado, configura los rangos con `currency: "llamaeconomy"`. Los rangos que omitan `currency` también conservan el comportamiento anterior y usan LlamaEconomy. Los identificadores de monedas secundarias deben existir y estar habilitados.
 
 ### Cómo añadir un rango nuevo
 
