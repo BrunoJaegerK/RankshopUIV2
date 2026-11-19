@@ -7,6 +7,7 @@ on:
       - feature/economyexpandnk-multicurrency
     paths:
       - 'src/**'
+      - 'README.md'
       - 'libs/**'
       - 'build.gradle.kts'
       - 'settings.gradle.kts'
