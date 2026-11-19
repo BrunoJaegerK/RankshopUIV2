@@ -77,6 +77,9 @@ public final class EconomyBridge {
     }
 
     public boolean withdraw(Player player, String currencyId, double amount) {
+        if (amount == 0.0) {
+            return true;
+        }
         String id = normalize(currencyId);
         if (LEGACY_CURRENCY.equals(id)) {
             if (LlamaEconomy.getAPI().getMoney(player) < amount) {
