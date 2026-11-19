@@ -44,9 +44,10 @@
 
 **RankshopUIV2** es un plugin para servidores de Minecraft Bedrock basados en Nukkit y forks compatibles. Su objetivo es permitir que los jugadores compren rangos con la moneda del servidor y reciban acceso a kits especiales que pueden reclamar desde una interfaz gráfica.
 
-El plugin integra dos sistemas principales:
+El plugin integra tres sistemas principales:
 
-- **LlamaEconomy:** consulta el saldo del jugador y descuenta el costo de la compra.
+- **LlamaEconomy:** economía heredada y predeterminada, compatible con las configuraciones existentes.
+- **[EconomyExpandNK](https://github.com/BrunoJaegerK/EconomyExpandNK):** dependencia **opcional** que permite cobrar cada rango con una moneda secundaria configurada.
 - **LuckPerms:** asigna el grupo correspondiente al rango comprado.
 
 Además, incluye un sistema de kits configurables con cooldowns individuales, objetos con nombres personalizados, colores y múltiples encantamientos.
@@ -128,10 +129,10 @@ Las siguientes imágenes están reservadas para capturas reales del plugin en fu
 flowchart TD
     A["/rangos"] --> B["Seleccionar rango"]
     B --> C["Confirmar compra"]
-    C --> D{"¿Saldo suficiente?"}
+    C --> D{"¿Saldo suficiente en la moneda del rango?"}
     D -- "No" --> E["Mostrar saldo insuficiente"]
-    D -- "Sí" --> F["Asignar grupo con LuckPerms"]
-    F --> G["Descontar dinero con LlamaEconomy"]
+    D -- "Sí" --> F["Descontar la moneda seleccionada"]
+    F --> G["Asignar grupo con LuckPerms"]
     G --> H["Desbloquear kits"]
     H --> I["/kits"]
     I --> J["Seleccionar kit"]
@@ -143,7 +144,7 @@ flowchart TD
     O --> P["Guardar cooldown"]
 ```
 
-> **Importante:** el proceso de compra utiliza una orden de LuckPerms y después descuenta el dinero. No es una transacción atómica: un fallo durante una de esas operaciones podría dejar los resultados parcialmente aplicados. Comprueba la consola si una compra presenta problemas.
+> **Importante:** el plugin descuenta primero la moneda seleccionada y después solicita a LuckPerms la asignación del grupo. Si no se puede iniciar la orden de LuckPerms, intenta reembolsar el importe usando la misma moneda. Revisa la consola si una compra presenta problemas.
 
 ## 📦 Dependencias
 
@@ -152,12 +153,13 @@ RankshopUIV2 necesita las siguientes dependencias:
 | Dependencia | Función |
 |---|---|
 | **Nukkit o fork compatible** | Plataforma del servidor donde se ejecuta el plugin. |
-| **LlamaEconomy** | Sistema económico utilizado para consultar y descontar dinero. |
+| **LlamaEconomy** | Dependencia requerida; economía predeterminada y compatibilidad con rangos antiguos. |
+| **[EconomyExpandNK](https://github.com/BrunoJaegerK/EconomyExpandNK)** | **Opcional**; necesaria únicamente para usar monedas secundarias. |
 | **LuckPerms para Nukkit** | Administración de grupos y permisos de rangos. |
 
 Las versiones de estas dependencias deben ser compatibles con el servidor utilizado.
 
-El plugin comprueba al iniciarse que LlamaEconomy y LuckPerms estén instalados. Si no encuentra alguno de ellos, deshabilita el plugin. EconomyExpandNK es opcional: sin él, los rangos configurados con monedas secundarias no estarán disponibles para compra, pero los rangos que usan LlamaEconomy seguirán funcionando.
+El plugin comprueba al iniciarse que LlamaEconomy y LuckPerms estén instalados. Si no encuentra alguno de ellos, deshabilita el plugin. EconomyExpandNK es opcional: sin él, los rangos configurados con monedas secundarias no estarán disponibles para compra, pero los rangos que usan LlamaEconomy seguirán funcionando. EconomyExpandNK es opcional: sin él, los rangos configurados con monedas secundarias no estarán disponibles para compra, pero los rangos que usan LlamaEconomy seguirán funcionando.
 
 ## ⚙️ Instalación
 
