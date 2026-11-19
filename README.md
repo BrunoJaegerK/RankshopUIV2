@@ -157,18 +157,18 @@ RankshopUIV2 necesita las siguientes dependencias:
 
 Las versiones de estas dependencias deben ser compatibles con el servidor utilizado.
 
-El plugin comprueba al iniciarse que LlamaEconomy y LuckPerms estén instalados. Si no encuentra alguno de ellos, deshabilita el plugin.
+El plugin comprueba al iniciarse que LlamaEconomy y LuckPerms estén instalados. Si no encuentra alguno de ellos, deshabilita el plugin. EconomyExpandNK es opcional: sin él, los rangos configurados con monedas secundarias no estarán disponibles para compra, pero los rangos que usan LlamaEconomy seguirán funcionando.
 
 ## ⚙️ Instalación
 
 1. Descarga o compila el JAR de Rankshop.
 2. Instala LlamaEconomy y LuckPerms en versiones compatibles con tu servidor.
-3. Coloca el JAR de Rankshop en la carpeta `plugins/`.
-4. Inicia el servidor para que se generen los archivos de configuración.
-5. Detén el servidor antes de editar la configuración.
-6. Personaliza los archivos dentro de `plugins/Rankshop/`.
-7. Inicia de nuevo el servidor.
-8. Prueba `/rangos` y `/kits`.
+3. (Opcional) Instala [EconomyExpandNK](https://github.com/BrunoJaegerK/EconomyExpandNK) si vas a cobrar rangos con monedas secundarias.\n4. Coloca el JAR de Rankshop en la carpeta `plugins/`.
+5. Inicia el servidor para que se generen los archivos de configuración.
+6. Detén el servidor antes de editar la configuración.
+7. Personaliza los archivos dentro de `plugins/Rankshop/`.
+8. Inicia de nuevo el servidor.
+9. Prueba `/rangos` y `/kits`.
 
 La carpeta de configuración debería contener:
 
@@ -236,8 +236,36 @@ identifiers:
 | `identifiers` | Lista de identificadores que aparecen en la tienda. |
 | `name` | Nombre que se muestra en el formulario. |
 | `lp-user` | Nombre del grupo de LuckPerms que se asigna. |
-| `price` | Precio del rango en la moneda de LlamaEconomy. |
+| `price` | Precio del rango en la moneda seleccionada. |\n| `currency` | ID de la moneda: `llamaeconomy` o el ID de una moneda habilitada en EconomyExpandNK. Si se omite, se utiliza `llamaeconomy`. |
 | `kits` | Lista de identificadores de kits que se desbloquean. |
+
+### Configurar la moneda de cada rango
+
+Cada rango tiene su propia opción `currency`. Usa `llamaeconomy` para la economía tradicional o el ID exacto de una moneda habilitada en `plugins/EconomyExpandNK/currencies.yml`.
+
+```yaml
+"vip":
+  name: "VIP"
+  lp-user: "vip"
+  price: 20000
+  currency: "llamaeconomy"
+
+"vipplus":
+  name: "VIP+"
+  lp-user: "vipplus"
+  price: 350
+  currency: "crystals"
+
+"elite":
+  name: "Elite"
+  lp-user: "elite"
+  price: 120
+  currency: "tokens"
+```
+
+Los formularios muestran el símbolo de la moneda junto al precio tanto en la lista de rangos como en la confirmación. Para LlamaEconomy se usa `currency-symbol` en la raíz de `config.yml`; para EconomyExpandNK se toma automáticamente el símbolo definido en `currencies.yml`.
+
+**EconomyExpandNK es opcional.** Si no está instalado, configura los rangos con `currency: "llamaeconomy"`. Los rangos que omitan `currency` también conservan el comportamiento anterior y usan LlamaEconomy. Los identificadores de monedas secundarias deben existir y estar habilitados.
 
 ### Cómo añadir un rango nuevo
 
