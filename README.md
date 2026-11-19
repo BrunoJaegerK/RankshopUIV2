@@ -5,7 +5,7 @@
   <img src="https://img.shields.io/badge/Plataforma-Nukkit-blue" alt="Nukkit">
   <img src="https://img.shields.io/badge/Lenguaje-Java-orange?logo=openjdk&logoColor=white" alt="Java">
   <img src="https://img.shields.io/badge/Build-Gradle-02303A?logo=gradle&logoColor=white" alt="Gradle">
-  <img src="https://img.shields.io/badge/Versión-1.1.0-purple" alt="Versión">
+  <img src="https://img.shields.io/badge/Versión-1.2.0-purple" alt="Versión">
 </p>
 
 <p align="center">
