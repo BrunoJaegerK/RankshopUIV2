@@ -210,13 +210,15 @@ identifiers:
   name: "VIP"
   lp-user: "vip"
   price: 20000
+  currency: "llamaeconomy"
   kits:
     - "vip"
 
 "vipplus":
   name: "VIP+"
   lp-user: "vipplus"
-  price: 35000
+  price: 350
+  currency: "crystals"
   kits:
     - "vipplus"
     - "vip"
@@ -224,7 +226,8 @@ identifiers:
 "elite":
   name: "Elite"
   lp-user: "elite"
-  price: 50000
+  price: 120
+  currency: "tokens"
   kits:
     - "elite"
 ```
