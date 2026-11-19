@@ -248,7 +248,7 @@ identifiers:
 
 ### Configurar la moneda de cada rango
 
-Cada rango tiene su propia opción `currency`. Usa `llamaeconomy` para la economía tradicional o el ID exacto de una moneda habilitada en `plugins/EconomyExpandNK/currencies.yml`.
+Cada rango tiene su propia opción `currency`. Usa `llamaeconomy` para la economía tradicional o el ID exacto de una moneda habilitada en `plugins/EconomyExpandNK/currencies.yml`. Para utilizar monedas secundarias, instala **[EconomyExpandNK](https://github.com/BrunoJaegerK/EconomyExpandNK)**; este complemento es **opcional** y no es necesario si todos tus rangos utilizan LlamaEconomy.
 
 ```yaml
 "vip":
