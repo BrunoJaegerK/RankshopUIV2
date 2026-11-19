@@ -96,7 +96,10 @@ public final class EconomyBridge {
         String id = normalize(currencyId);
         if (LEGACY_CURRENCY.equals(id)) {
             try {
-                LlamaEconomy.getAPI().addMoney(player.getName(), amount);
+                Object api = LlamaEconomy.getAPI();
+                java.lang.reflect.Method method = api.getClass().getMethod(
+                        "addMoney", String.class, double.class);
+                method.invoke(api, player.getName(), amount);
                 return true;
             } catch (Throwable error) {
                 plugin.getLogger().error("No se pudo reembolsar LlamaEconomy.", error);
@@ -112,8 +115,10 @@ public final class EconomyBridge {
 
     private Object getSecondaryCurrency(String id) {
         Object economy = getSecondaryEconomy();
-        return invokeSecondary(economy, "getCurrency",
+        Object currency = invokeSecondary(economy, "getCurrency",
                 new Class<?>[]{String.class}, id);
+        return Boolean.TRUE.equals(invoke(currency, "isEnabled"))
+                ? currency : null;
     }
 
     private Object getSecondaryEconomy() {
